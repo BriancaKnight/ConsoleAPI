@@ -8,16 +8,17 @@ using System.Collections.Generic;
 
 namespace ApiTest
 {
-  class Program 
+public class Program 
   {
     static void Main()
     {
       Task<string> apiCallTask = ApiHelper.ApiCall(EnvironmentVariables.ApiKey);
       string result = apiCallTask.Result;
       JObject jsonResponse = JsonConvert.DeserializeObject<JObject>(result);
-      Console.WriteLine(jsonResponse["results"]);
+      
+      List<Article> articleList = JsonConvert.DeserializeObject<List<Article>>(jsonResponse["results"].ToString());
 
-    foreach (Article article in articleList)
+      foreach (Article article in articleList)
       {
         Console.WriteLine($"Section: {article.Section}");
         Console.WriteLine($"Title: {article.Title}");
@@ -25,7 +26,6 @@ namespace ApiTest
         Console.WriteLine($"Url: {article.Url}");
         Console.WriteLine($"Byline: {article.Byline}");
         Console.WriteLine($"Item_Type: {article.Item_Type}");
-        Console.WriteLine("------------------------");
         if (article.Multimedia != null)
         {
           foreach (Multimedia media in article.Multimedia)
@@ -38,9 +38,8 @@ namespace ApiTest
           }
         }
         Console.WriteLine("__________________________________");
-      
+      }
     }
-   }
   }
 
   class ApiHelper
